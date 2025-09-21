@@ -1,0 +1,21 @@
+<p-toast position="bottom-right"></p-toast>
+
+<div class="flex justify-start h-screen">
+  <div class="w-[30%] flex-shrink-0  flex justify-center items-center ">
+    <app-notebookAddForm (notebookAdded)="onNotebookAdded()"></app-notebookAddForm>
+  </div>
+
+  <div class="w-[70%] p-4">
+    <div class="grid grid-cols-3 gap-2">
+      @for (notebook of notebooks; track notebook.id) {
+        <app-notebook-card-component
+          [title]="notebook.title"
+          [description]="notebook.description"
+          [id]="notebook.id"
+          (onDelete)="onNotebookDeleted($event)"
+        >
+        </app-notebook-card-component>
+      }
+    </div>
+  </div>
+</div>

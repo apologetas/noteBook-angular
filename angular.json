@@ -83,10 +83,14 @@
             ],
             "styles": [
               "src/styles.css"
+
             ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "35c543a3-2720-4c82-a46b-da1385c160bf"
   }
 }

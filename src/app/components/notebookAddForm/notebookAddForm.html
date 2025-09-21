@@ -1,0 +1,34 @@
+<div class="flex justify-center flex-col gap-8 p-8 w-96 min-w-[300px] max-w-md ">
+
+  <div class="w-70 max-w-[85%] mx-auto ">
+    <label for="title" class="block text-gray-800 text-lg font-medium mb-2">Pavadinimas</label>
+    <input
+      id="title"
+      [(ngModel)]="title"
+      type="text"
+      class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-200 transition-all"
+      placeholder="Įveskite pavadinimą"
+    />
+  </div>
+
+  <div class="w-70 max-w-[85%] mx-auto">
+    <label for="description" class="block text-gray-800 text-lg font-medium mb-2">Tekstas</label>
+    <textarea
+      id="description"
+      rows="2"
+      [(ngModel)]="description"
+      class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-200 transition-all resize-none overflow-hidden"
+      placeholder="Įveskite tekstą"
+      (input)="autoResize($event)"
+    ></textarea>
+  </div>
+
+  <div class="flex justify-center ">
+    <button
+      type="button"
+      (click)="addNotebook()"
+      class="bg-slate-800 rounded-md text-white py-3 px-12 hover:bg-slate-700 cursor-pointer">
+      Pridėti
+    </button>
+  </div>
+</div>

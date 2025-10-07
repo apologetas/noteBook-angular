@@ -1,0 +1,15 @@
+@FIREBASE_DATABASE_URL = https://notes-78c1c-default-rtdb.europe-west1.firebasedatabase.app
+
+
+### fetch all notes
+GET {{FIREBASE_DATABASE_URL}}/notes.json
+
+
+### create new note
+POST {{FIREBASE_DATABASE_URL}}/notes.json
+Content-Type: application/json
+
+{
+  "title": "pavadinimas2",
+  "description": "aprasas2"
+}

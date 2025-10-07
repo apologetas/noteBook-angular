@@ -26,7 +26,9 @@ export class NotebookContainer  {
 
 
   loadNotebooks() {
-    this.notebooks = this.notebookService.getAllNotebooks();
+    this.notebookService.getAllNotebooks().subscribe(notebooks => {
+      this.notebooks = notebooks;
+    });
   }
 
   onNotebookAdded() {

@@ -1,59 +1,70 @@
+
 import { Injectable } from '@angular/core';
-import {Notebook} from '../../models/notebook.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Notebook } from '../../models/notebook.model';
+import { NotebookRepository } from '../../repository/notebook.repository';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotebookService {
-  private notebookList: Notebook[]= [];
+  private notebookListSubject = new BehaviorSubject<Notebook[]>([]);
+  public notebooks$ = this.notebookListSubject.asObservable();
 
-  getAllNotebooks(): Notebook [] {
-   return  this.notebookList;
+  constructor(private repository: NotebookRepository) {
+    this.loadNotebooks();
   }
 
-  constructor() {
-    this.notebookList =  this.fetchFromLocalStorage();
+  private loadNotebooks(): void {
+    this.repository.getAll().subscribe({
+      next: notebooks => {
+        this.notebookListSubject.next(notebooks);
+      },
+      error: err => {
+        console.error('❌NotebookService:  error loading notebooks:', err);
+      }
+    });
   }
 
-  addNoteBook(title:string, description:string): Notebook{
+  getAllNotebooks(): Observable<Notebook[]> {
+    return this.notebooks$;
+  }
+
+  addNoteBook(title: string, description: string): void {
+    const currentList = this.notebookListSubject.value;
     const newNotebook: Notebook = {
-      id: this.getNextId(),
-      title :title,
-      description :description
-    }
+      id: this.getNextId(currentList),
+      title: title,
+      description: description
+    };
 
-    this.notebookList.push(newNotebook);
-    this.saveToLocalStorage()
-
-
-    return newNotebook;
-
+    this.repository.add(newNotebook).subscribe({
+      next: () => {
+        const updatedList = [...currentList, newNotebook];
+        this.notebookListSubject.next(updatedList);
+      },
+      error: err => {
+        console.error('❌ NotebookService: Error adding notebook:', err);
+      }
+    });
   }
+
   deleteNotebook(id: number): void {
-    this.notebookList = this.notebookList.filter(n => n.id !== id);
-    this.saveToLocalStorage()
+    this.repository.delete(id).subscribe({
+      next: () => {
+        const updatedList = this.notebookListSubject.value.filter(n => n.id !== id);
+        this.notebookListSubject.next(updatedList);
+      },
+      error: err => {
+        console.error('❌ NotebookService: Error deleting notebook:', err);
+      }
+    });
   }
 
-
-  private saveToLocalStorage(): void{
-    localStorage.setItem('notebooks', JSON.stringify(this.notebookList));
-  }
-
-  private getNextId (): number{
-    if(this.notebookList.length ==0){
+  private getNextId(notebooks: Notebook[]): number {
+    if (!notebooks || notebooks.length === 0) {
       return 1;
     }
-    return Math.max(...this.notebookList.map(n => n.id)) + 1
-
+    return Math.max(...notebooks.map(n => n.id)) + 1;
   }
-
-  private fetchFromLocalStorage(): Notebook [] {
-    const noteBooks = localStorage.getItem('notebooks');
-    if (noteBooks != null) {
-     return  this.notebookList = JSON.parse(noteBooks);
-    } else {
-      return  this.notebookList = [];
-    }
-  }
-
 }

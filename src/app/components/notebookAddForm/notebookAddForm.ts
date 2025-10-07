@@ -17,15 +17,12 @@ export class NotebookAddForm {
   constructor(private notebookService:NotebookService) {
   }
 
-// notebookAddForm.component.ts
   addNotebook() {
     if (this.title && this.description) {
-      console.log('➕ FORM: Adding notebook:', this.title, this.description);
       this.notebookService.addNoteBook(this.title, this.description);
       this.clearForm();
-      console.log('📡 FORM: About to emit event...');
       this.notebookAdded.emit();
-      console.log('✅ FORM: Event emitted!');
+
     }
   }
 
